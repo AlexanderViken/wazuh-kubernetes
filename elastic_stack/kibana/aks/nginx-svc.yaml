@@ -1,0 +1,51 @@
+# Copyright (C) 2018 Wazuh Inc.
+#
+# This program is a free software; you can redistribute it
+# and/or modify it under the terms of the GNU General Public
+# License (version 2) as published by the FSF - Free Software
+# Foundation.
+
+# Nginx service
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: wazuh-nginx
+  namespace: wazuh
+  labels:
+    app: wazuh-nginx
+    # dns: route53
+  annotations:
+    domainName: wazuh.megatherion.no
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+spec:
+  type: LoadBalancer
+  selector:
+    app: wazuh-nginx
+  ports:
+    - name: web-https
+      port: 443
+      targetPort: 443
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: wazuh-ingress-ssl
+  namespace: wazuh
+  annotations:
+    kubernetes.io/ingress.class: azure/application-gateway
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+    cert-manager.io/acme-challenge-type: http01
+spec:
+  tls:
+    - hosts:
+      - wazuh.megatherion.no
+      secretName: wazuh-nginx-ingress
+  rules:
+  - host: pci.megatherion.no
+    http:
+      paths:
+      - backend:
+          serviceName: wazuh-nginx
+          servicePort: 443
+        path : /
