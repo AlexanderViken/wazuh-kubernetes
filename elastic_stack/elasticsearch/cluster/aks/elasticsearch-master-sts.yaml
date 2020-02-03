@@ -58,8 +58,20 @@ spec:
               cpu: 500m
               memory: 1Gi
             limits:
-              cpu: 1
+              cpu: 2
               memory: 2Gi
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 9200
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 9200
+            periodSeconds: 3
+            timeoutSeconds: 1
           env:
             - name: ES_JAVA_OPTS
               value: '-Xms512m -Xmx512m'
@@ -98,7 +110,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: managed-premium-retain
+        storageClassName: gp2-encrypted-retained
         resources:
           requests:
             storage: 10Gi

@@ -12,6 +12,8 @@ kind: Service
 metadata:
   name: elasticsearch
   namespace: wazuh
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-internal: "true"
   labels:
     app: wazuh-elasticsearch
 spec:
