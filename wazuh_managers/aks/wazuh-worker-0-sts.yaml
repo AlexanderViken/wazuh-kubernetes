@@ -74,7 +74,7 @@ spec:
       spec:
         accessModes:
           - ReadWriteOnce
-        storageClassName: managed-premium-retain
+        storageClassName: gp2-encrypted-retained
         resources:
           requests:
             storage: 10Gi

@@ -17,7 +17,7 @@ metadata:
     # dns: route53
   annotations:
     # domainName: 'wazuh-manager.some-domain.com'  # TODO: Change this for a Hosted Zone you configured in AWS Route 53
-    service.beta.kubernetes.io/azure-load-balancer-internal: 0.0.0.0/0
+    service.beta.kubernetes.io/azure-load-balancer-internal: TCP
 spec:
   type: LoadBalancer
   selector:

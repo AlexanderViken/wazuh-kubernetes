@@ -28,8 +28,31 @@ In case you need to provide a domain name, update the `domainName` annotation va
 
 ```BASH
 $ kubectl apply -f elastic_stack/kibana/aks/kibana-svc.yaml
-$ kubectl apply -f elastic_stack/kibana/aks/nginx-svc.yaml
+kubectl apply -f elastic_stack/kibana/aks/nginx-svc.yaml
 
 $ kubectl apply -f elastic_stack/kibana/aks/kibana-deploy.yaml
 $ kubectl apply -f elastic_stack/kibana/aks/nginx-deploy.yaml
+```
+kubectl delete -f elastic_stack/kibana/aks/kibana-svc.yaml
+kubectl delete -f elastic_stack/kibana/aks/nginx-svc.yaml
+
+
+### Step 5: Deploy Wazuh
+
+Wazuh cluster deployment.
+
+In case you need to provide a domain name, update the `domainName` annotation value in both the [wazuh-master-svc.yaml](wazuh_managers/wazuh-master-svc.yaml) and the [wazuh-workers-svc.yaml](wazuh_managers/wazuh-workers-svc.yaml) files before deploying those services. You should also set a valid AWS ACM certificate ARN in the [wazuh-master-svc.yaml](wazuh_managers/wazuh-master-svc.yaml) for the `service.beta.kubernetes.io/aws-load-balancer-ssl-cert` annotation. That certificate should match with the `domainName`.
+
+```BASH
+$ kubectl apply -f wazuh_managers/aks/wazuh-master-svc.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-cluster-svc.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-workers-svc.yaml
+
+$ kubectl apply -f wazuh_managers/aks/wazuh-master-conf.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-worker-0-conf.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-worker-1-conf.yaml
+
+$ kubectl apply -f wazuh_managers/aks/wazuh-master-sts.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-worker-0-sts.yaml
+$ kubectl apply -f wazuh_managers/aks/wazuh-worker-1-sts.yaml
 ```
